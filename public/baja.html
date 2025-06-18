@@ -1,0 +1,80 @@
+<!-- Baja Alumno -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Baja Alumno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    input {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color: #dc3545;
+      outline: none;
+    }
+    button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #a71d2a;
+    }
+
+    /* Estilo para botón volver */
+    .btn-volver {
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+      padding: 10px 0;
+      background-color: #6c757d;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .btn-volver:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <h2>Eliminar alumno</h2>
+  <form action="/baja" method="post">
+    <input name="no_control" placeholder="No. Control" required>
+    <button type="submit">Eliminar</button>
+  </form>
+
+  <a href="/alumnos" class="btn-volver">Volver al inicio</a>
+</body>
+</html>
+

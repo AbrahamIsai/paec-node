@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizar Alumnos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #FFA500;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto 20px auto;
+            padding: 20px;
+            border: 2px solid #FFA500;
+            border-radius: 10px;
+            background-color: #fdf5e6;
+        }
+        label, select, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        select, button {
+            padding: 8px;
+            border: 1px solid #FFA500;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #FFA500;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e59400;
+        }
+        .volver {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .volver a {
+            text-decoration: none;
+            color: #FFA500;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Visualizar Alumnos</h2>
+    <form method="get" action="/visualizar">
+    <label for="campo">Selecciona un campo:</label>
+    <select name="campo" id="campo" onchange="toggleValorInput()">
+        <option value="">-- Ver todos --</option>
+        <option value="no_control">No. Control</option>
+        <option value="nombre">Nombre</option>
+        <option value="carrera">Carrera</option>
+        <option value="semestre">Semestre</option>
+        <option value="correo">Correo</option>
+        <option value="edad">Edad</option>
+        <option value="Generacion">Generación</option>
+    </select>
+
+    <div id="valorInput" style="display:none;">
+        <label for="valor">Escribe el valor a buscar:</label>
+        <input type="text" name="valor" id="valor" placeholder="Ej. Carlos o 2025001001">
+    </div>
+
+    <button type="submit">Visualizar</button>
+</form>
+
+<script>
+function toggleValorInput() {
+    const campo = document.getElementById('campo').value;
+    const valorInput = document.getElementById('valorInput');
+    if (campo === 'nombre' || campo === 'no_control' || campo === 'correo') {
+        valorInput.style.display = 'block';
+    } else {
+        valorInput.style.display = 'none';
+    }
+}
+</script>
+    </form>
+    <div class="volver">
+        <a href="/alumnos">Volver al inicio</a>
+    </div>
+</body>
+</html>

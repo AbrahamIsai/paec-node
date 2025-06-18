@@ -1,0 +1,86 @@
+<!-- Alta Alumno -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alta Alumno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    input {
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+    button {
+      padding: 10px;
+      font-size: 1em;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Nuevo estilo para botón volver */
+    .btn-volver {
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+      padding: 10px 0;
+      background-color: #6c757d;
+      color: white;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .btn-volver:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registrar nuevo alumno</h2>
+  <form action="/alta" method="post">
+    <input name="no_control" placeholder="No. Control" required>
+    <input name="nombre" placeholder="Nombre" required>
+    <input name="carrera" placeholder="Carrera" required>
+    <input name="semestre" type="number" placeholder="Semestre" required min="1" max="12">
+    <input name="correo" type="email" placeholder="Correo" required>
+    <input name="edad" type="number" placeholder="Edad" required min="1" max="120">
+    <input name="Generacion" type="number" placeholder="Generación" required>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <a href="/alumnos" class="btn-volver">Volver al inicio</a>
+</body>
+</html>
+
+

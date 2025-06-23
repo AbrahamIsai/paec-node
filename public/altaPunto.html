@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Alta Punto de Recolección</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 460px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #28a745;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #28a745;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #28a745;
+    }
+
+    .btn-volver {
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+      background-color: #6c757d;
+      color: white;
+      padding: 10px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-volver:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registrar Punto de Recolección</h2>
+    <form action="/altaPunto" method="post">
+
+      <label for="ubicacion">Ubicación</label>
+      <select name="ubicacion" id="ubicacion" required>
+        <option value="">-- Seleccione ubicación --</option>
+        <option value="Contenedores alrededor de edificio A">Edificio A</option>
+        <option value="Contenedores alrededor de edificio B">Edificio B</option>
+        <option value="Contenedores alrededor de edificio C">Edificio C</option>
+        <option value="Contenedores alrededor de edificio D">Edificio D</option>
+        <option value="Contenedores alrededor de edificio E">Edificio E</option>
+        <option value="Contenedores alrededor de edificio N">Edificio N</option>
+        <option value="Contenedores alrededor de edificio L">Edificio L</option>
+        <option value="Contenedores alrededor de edificio SC1">Edificio SC1</option>
+        <option value="Contenedores alrededor de edificio SC2">Edificio SC2</option>
+        <option value="Contenedores alrededor de edificio SC3">Edificio SC3</option>
+        <option value="Contenedores alrededor de edificio SC4">Edificio SC4</option>
+        <option value="Contenedores alrededor de Mecatronica">Mecatronica</option>
+        <option value="Contenedores alrededor de Logistica">Logistica</option>
+        <option value="Contenedores alrededor de Electronica">Electronica</option>
+      </select>
+
+      <label for="tipo_reciclaje">Tipo de Reciclaje</label>
+      <select name="tipo_reciclaje" id="tipo_reciclaje" required>
+        <option value="">-- Seleccione tipo --</option>
+        <option value="Plástico">Plástico</option>
+        <option value="Vidrio">Vidrio</option>
+        <option value="Papel y cartón">Papel y cartón</option>
+        <option value="Residuos orgánicos">Residuos orgánicos</option>
+        <option value="Metales">Metales</option>
+        <option value="Tetra Pak">Tetra Pak</option>
+        <option value="Baterías">Baterías</option>
+        <option value="Tecnológicos">Tecnológicos</option>
+        <option value="Cartón">Cartón</option>
+      </select>
+
+      <input name="horario" placeholder="Horario (ej. 08:00 - 14:00)" required>
+
+      <label for="responsable">Responsable</label>
+      <select name="responsable" id="responsable" required>
+        <option value="">-- Seleccione responsable --</option>
+        <option value="Coordinación de ecología">Coordinación de ecología</option>
+        <option value="Docente">Docente</option>
+        <option value="Alumno">Alumno</option>
+        <option value="Equipo de coordinación de ecología">Equipo de coordinación de ecología</option>
+      </select>
+
+      <button type="submit">Guardar</button>
+    </form>
+
+    <a href="/puntosrecoleccion" class="btn-volver">Volver al inicio</a>
+  </div>
+</body>
+</html>

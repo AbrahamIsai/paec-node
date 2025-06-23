@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Baja Residuo</title>
+  <title>Alta Residuo</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,12 +20,12 @@
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
     }
 
     h2 {
       text-align: center;
-      color: #dc3545;
+      color: #007BFF;
       margin-bottom: 25px;
     }
 
@@ -35,7 +35,7 @@
       gap: 15px;
     }
 
-    input {
+    input, select {
       padding: 10px;
       font-size: 15px;
       border: 1px solid #ccc;
@@ -44,13 +44,18 @@
       transition: border 0.3s ease;
     }
 
-    input:focus {
-      border-color: #dc3545;
+    input:focus, select:focus {
+      border-color: #007BFF;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
     }
 
     button {
       padding: 12px;
-      background-color: #dc3545;
+      background-color: #007BFF;
       color: white;
       font-weight: bold;
       font-size: 16px;
@@ -61,7 +66,7 @@
     }
 
     button:hover {
-      background-color: #a71d2a;
+      background-color: #0056b3;
     }
 
     .btn-volver {
@@ -84,13 +89,36 @@
 </head>
 <body>
   <div class="container">
-    <h2>Eliminar Residuo</h2>
-    <form action="/baja" method="post">
+    <h2>Registrar Residuo</h2>
+    <form action="/alta" method="post">
       <input name="id_proyecto" placeholder="ID del Proyecto" required>
-      <button type="submit">Eliminar</button>
+      <input name="nombre" placeholder="Nombre del Residuo" required>
+
+      <label for="tipo_residuo">Tipo de Residuo</label>
+      <select name="tipo_residuo" id="tipo_residuo" required>
+        <option value="">-- Seleccione tipo --</option>
+        <option value="Organico">Organico</option>
+        <option value="Reciclable">Reciclable</option>
+        <option value="Peligroso">Peligroso</option>
+        <option value="Reutilizable">Reutilizable</option>
+      </select>
+
+      <input name="descripción" placeholder="Descripción" required>
+
+      <label for="estatus">Estatus</label>
+      <select name="estatus" id="estatus" required>
+        <option value="">-- Seleccione estatus --</option>
+        <option value="por iniciar">por iniciar</option>
+        <option value="en proceso">en proceso</option>
+        <option value="terminado">terminado</option>
+      </select>
+
+      <input name="fecha" placeholder="Fecha (ej. 2025-06-22)" required>
+
+      <button type="submit">Guardar</button>
     </form>
+
     <a href="/residuos" class="btn-volver">Volver al inicio</a>
   </div>
 </body>
 </html>
-

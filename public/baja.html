@@ -1,80 +1,96 @@
-<!-- Baja Alumno -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Baja Alumno</title>
+  <meta charset="UTF-8">
+  <title>Baja Residuo</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 30px auto;
-      padding: 10px;
-      background: #f9f9f9;
-      border-radius: 6px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+    }
+
     h2 {
       text-align: center;
-      color: #333;
-      margin-bottom: 20px;
+      color: #dc3545;
+      margin-bottom: 25px;
     }
+
     form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 15px;
     }
+
     input {
       padding: 10px;
-      font-size: 1em;
+      font-size: 15px;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s ease;
     }
+
     input:focus {
       border-color: #dc3545;
-      outline: none;
     }
+
     button {
-      padding: 10px;
-      font-size: 1em;
+      padding: 12px;
       background-color: #dc3545;
       color: white;
+      font-weight: bold;
+      font-size: 16px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
       background-color: #a71d2a;
     }
 
-    /* Estilo para botón volver */
     .btn-volver {
       margin-top: 20px;
       display: block;
       text-align: center;
-      padding: 10px 0;
       background-color: #6c757d;
       color: white;
-      border-radius: 4px;
+      padding: 10px;
       text-decoration: none;
+      border-radius: 8px;
       font-weight: bold;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s ease;
     }
+
     .btn-volver:hover {
       background-color: #5a6268;
     }
   </style>
 </head>
 <body>
-  <h2>Eliminar alumno</h2>
-  <form action="/baja" method="post">
-    <input name="no_control" placeholder="No. Control" required>
-    <button type="submit">Eliminar</button>
-  </form>
-
-  <a href="/alumnos" class="btn-volver">Volver al inicio</a>
+  <div class="container">
+    <h2>Eliminar Residuo</h2>
+    <form action="/baja" method="post">
+      <input name="id_proyecto" placeholder="ID del Proyecto" required>
+      <button type="submit">Eliminar</button>
+    </form>
+    <a href="/residuos" class="btn-volver">Volver al inicio</a>
+  </div>
 </body>
 </html>
 

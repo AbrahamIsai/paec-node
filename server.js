@@ -1,243 +1,363 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
-const path = require('path');
-const app = express();
-const PORT = 3000;
+require('dotenv').config();
 
-const uri = 'mongodb+srv://alcantarazuletaabraham46:isai12345R@abraham.lmw2w8u.mongodb.net/?retryWrites=true&w=majority&appName=Abraham';
+const app = express();
+const PORT = process.env.PORT || 3000;
+const uri = process.env.MONGO_URI;
+
 const client = new MongoClient(uri);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Visualizar alumnos
-app.get('/alumnos', async (req, res) => {
-    try {
-        await client.connect();
-        const db = client.db('Escuela');
-        const alumnos = await db.collection('Alumnos').find().toArray();
+async function main() {
+  try {
+    await client.connect();
+    const db = client.db('Proyecto');
+    console.log('Conectado a MongoDB');
+
+    // Listar todos los residuos
+    app.get('/residuos', async (req, res) => {
+      try {
+        const residuos = await db.collection('paec').find().toArray();
 
         let html = `
-        <html>
+        <!DOCTYPE html>
+        <html lang="es">
         <head>
-            <style>
-                table {
-                    border-collapse: collapse;
-                    width: 95%;
-                    margin: 20px auto;
-                }
-                th, td {
-                    border: 1px solid #FFA500;
-                    padding: 8px;
-                    text-align: center;
-                }
-                th {
-                    background-color: #FFA500;
-                    color: white;
-                }
-                body {
-                    font-family: Arial, sans-serif;
-                }
-                .menu {
-                    text-align: center;
-                    margin: 20px;
-                }
-                .menu a {
-                    margin: 0 10px;
-                    text-decoration: none;
-                    color: #FFA500;
-                    font-weight: bold;
-                }
-            </style>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Lista de Residuos</title>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              background-color: #f0f2f5;
+              margin: 0;
+              padding: 20px;
+            }
+            h2 {
+              color: #007BFF;
+              text-align: center;
+            }
+            .menu {
+              text-align: center;
+              margin: 20px 0;
+            }
+            .menu a {
+              margin: 0 15px;
+              text-decoration: none;
+              color: #007BFF;
+              font-weight: 500;
+              transition: color 0.3s ease;
+            }
+            .menu a:hover {
+              color: #0056b3;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: auto;
+              background-color: white;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            th, td {
+              padding: 12px 16px;
+              text-align: center;
+              border-bottom: 1px solid #e0e0e0;
+            }
+            th {
+              background-color: #007BFF;
+              color: white;
+              text-transform: uppercase;
+            }
+            tr:hover {
+              background-color: #f1f1f1;
+            }
+          </style>
         </head>
         <body>
-            <h2 style="text-align:center; color: #FFA500;">Lista de Alumnos</h2>
-            <div class="menu">
-                <a href="/alta.html">Alta</a>
-                <a href="/baja.html">Baja</a>
-                <a href="/actualizar.html">Actualizar</a>
-                <a href="/visualizar.html">Visualizar</a>
-            </div>
-            <table>
-                <tr>
-                    <th>No. Control</th>
-                    <th>Nombre</th>
-                    <th>Carrera</th>
-                    <th>Semestre</th>
-                    <th>Correo</th>
-                    <th>Edad</th>
-                    <th>Generación</th>
-                </tr>`;
+          <h2>Lista de Residuos del Proyecto</h2>
+          <div class="menu">
+            <a href="/alta.html">Alta</a>
+            <a href="/baja.html">Baja</a>
+            <a href="/actualizar.html">Actualizar</a>
+            <a href="/visualizar.html">Visualizar</a>
+          </div>
+          <table>
+            <tr>
+              <th>ID Proyecto</th>
+              <th>Nombre</th>
+              <th>Tipo de Residuo</th>
+              <th>Descripción</th>
+              <th>Estatus</th>
+              <th>Fecha</th>
+            </tr>`;
 
-        alumnos.forEach(alumno => {
-            html += `
-                <tr>
-                    <td>${alumno.no_control}</td>
-                    <td>${alumno.nombre}</td>
-                    <td>${alumno.carrera}</td>
-                    <td>${alumno.semestre}</td>
-                    <td>${alumno.correo}</td>
-                    <td>${alumno.edad}</td>
-                    <td>${alumno.Generacion}</td>
-                </tr>`;
+        residuos.forEach(item => {
+          html += `
+            <tr>
+              <td>${item.id_proyecto || ''}</td>
+              <td>${item.nombre || ''}</td>
+              <td>${item.tipo_residuo || ''}</td>
+              <td>${item.descripción || ''}</td>
+              <td>${item.estatus || ''}</td>
+              <td>${item.fecha || ''}</td>
+            </tr>`;
         });
 
-        html += `</table></body></html>`;
+        html += `
+          </table>
+        </body>
+        </html>`;
+
         res.send(html);
-    } catch (err) {
-        res.status(500).send('Error al obtener los alumnos: ' + err.message);
-    } finally {
-        await client.close();
-    }
-});
 
-// Alta
-app.post('/alta', async (req, res) => {
-    const nuevoAlumno = req.body;
-    try {
-        await client.connect();
-        const db = client.db('Escuela');
-        await db.collection('Alumnos').insertOne(nuevoAlumno);
-        res.redirect('/alumnos');
-    } catch (err) {
-        res.status(500).send('Error al insertar alumno: ' + err.message);
-    } finally {
-        await client.close();
-    }
-});
+      } catch (err) {
+        res.status(500).send('Error al obtener los residuos: ' + err.message);
+      }
+    });
 
-// Baja
-app.post('/baja', async (req, res) => {
-    const noControl = req.body.no_control;
-    try {
-        await client.connect();
-        const db = client.db('Escuela');
-        await db.collection('Alumnos').deleteOne({ no_control: noControl });
-        res.redirect('/alumnos');
-    } catch (err) {
-        res.status(500).send('Error al eliminar alumno: ' + err.message);
-    } finally {
-        await client.close();
-    }
-});
+    // Alta - Insertar nuevo residuo
+    app.post('/alta', async (req, res) => {
+      try {
+        const nuevoResiduo = {
+          id_proyecto: req.body.id_proyecto,
+          nombre: req.body.nombre,
+          tipo_residuo: req.body.tipo_residuo.toLowerCase(),
+          descripción: req.body.descripción,
+          estatus: req.body.estatus.toLowerCase(),
+          fecha: req.body.fecha
+        };
+        await db.collection('paec').insertOne(nuevoResiduo);
+        res.redirect('/residuos');
+      } catch (err) {
+        res.status(500).send('Error al insertar residuo: ' + err.message);
+      }
+    });
 
-// Actualizar
+    // Baja - Eliminar residuo por id_proyecto
+    app.post('/baja', async (req, res) => {
+      try {
+        const idProyecto = req.body.id_proyecto;
+        await db.collection('paec').deleteOne({ id_proyecto: idProyecto });
+        res.redirect('/residuos');
+      } catch (err) {
+        res.status(500).send('Error al eliminar residuo: ' + err.message);
+      }
+    });
+
+// Función para capitalizar la primera letra y poner el resto en minúsculas
+function capitalizarPrimeraLetra(texto) {
+  if (!texto) return '';
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}
+
 app.post('/actualizar', async (req, res) => {
-    const { no_control, nombre, carrera, semestre, correo, edad, Generacion } = req.body;
-    const nuevosDatos = {};
-    if (nombre) nuevosDatos.nombre = nombre;
-    if (carrera) nuevosDatos.carrera = carrera;
-    if (semestre) nuevosDatos.semestre = parseInt(semestre);
-    if (correo) nuevosDatos.correo = correo;
-    if (edad) nuevosDatos.edad = parseInt(edad);
-    if (Generacion) nuevosDatos.Generacion = parseInt(Generacion);
+  try {
+    let { id_proyecto, nombre, tipo_residuo, descripción, estatus, fecha, field } = req.body;
 
-    try {
-        await client.connect();
-        const db = client.db('Escuela');
-        await db.collection('Alumnos').updateOne(
-            { no_control },
-            { $set: nuevosDatos }
-        );
-        res.redirect('/alumnos');
-    } catch (err) {
-        res.status(500).send('Error al actualizar alumno: ' + err.message);
-    } finally {
-        await client.close();
+    // Log inicial
+    console.log("Datos recibidos:", req.body);
+
+    // Tratar de buscar el documento con id_proyecto como número o string
+    const idProyectoNumero = Number(id_proyecto);
+    const query = {
+      $or: [
+        { id_proyecto: idProyectoNumero },
+        { id_proyecto: id_proyecto }
+      ]
+    };
+
+    const nuevosDatos = {};
+
+    // Si se actualizan todos los campos
+    if (field === 'todos') {
+      if (nombre) nuevosDatos.nombre = nombre;
+      if (tipo_residuo) nuevosDatos.tipo_residuo = capitalizarPrimeraLetra(tipo_residuo);
+      if (descripción) nuevosDatos.descripción = descripción;
+      if (estatus) nuevosDatos.estatus = estatus.toLowerCase();
+      if (fecha) nuevosDatos.fecha = fecha;
+    } else if (field) {
+      if (req.body[field]) {
+        if (field === 'tipo_residuo') {
+          nuevosDatos.tipo_residuo = capitalizarPrimeraLetra(tipo_residuo);
+        } else if (field === 'estatus') {
+          nuevosDatos.estatus = estatus.toLowerCase();
+        } else {
+          nuevosDatos[field] = req.body[field];
+        }
+      }
     }
+
+    console.log("Filtro aplicado para buscar:", query);
+    console.log("Datos a actualizar:", nuevosDatos);
+
+    // Ejecutar la actualización
+    const resultado = await db.collection('paec').updateOne(
+      query,
+      { $set: nuevosDatos }
+    );
+
+    console.log("Resultado de actualización:", resultado);
+
+    if (resultado.matchedCount === 0) {
+      console.log("❌ No se encontró el documento con ese ID.");
+    }
+
+    res.redirect('/residuos');
+
+  } catch (err) {
+    console.error("❌ Error al actualizar:", err);
+    res.status(500).send("Error al actualizar residuo: " + err.message);
+  }
 });
+
 
 // Visualizar con filtro
 app.get('/visualizar', async (req, res) => {
+  try {
     const campo = req.query.campo;
-    const valor = req.query.valor;
+    let valor = Array.isArray(req.query.valor) ? req.query.valor[0] : req.query.valor;
 
-    try {
-        await client.connect();
-        const db = client.db('Escuela');
-        const coleccion = db.collection('Alumnos');
-        let alumnos;
+    console.log('Campo recibido:', campo, 'Tipo:', typeof campo);
+    console.log('Valor recibido:', valor, 'Tipo:', typeof valor);
 
-        if (!campo) {
-            alumnos = await coleccion.find().toArray();
-        } else if (['nombre', 'no_control', 'correo'].includes(campo) && valor) {
-            const filtro = {};
-            filtro[campo] = valor;
-            alumnos = await coleccion.find(filtro).toArray();
-        } else {
-            const repetidos = await coleccion.aggregate([
-                { $group: { _id: `$${campo}`, count: { $sum: 1 } } },
-                { $match: { count: { $gt: 1 } } }
-            ]).toArray();
+    const coleccion = db.collection('paec');
+    let filtro = {};
+    let residuos;
 
-            const valores = repetidos.map(r => r._id);
-            const filtro = {};
-            filtro[campo] = { $in: valores };
-            alumnos = await coleccion.find(filtro).toArray();
-        }
+    if (!campo || !valor) {
+      residuos = await coleccion.find().toArray();
+    } else {
+      if (campo === 'id_proyecto') {
+        const valorNumerico = Number(valor);
+        console.log('Valor numérico para id_proyecto:', valorNumerico, 'Tipo:', typeof valorNumerico);
+        filtro[campo] = valorNumerico;
+      } else if (campo === 'estatus') {
+        // Coincidencia exacta pero insensible a mayúsculas
+        filtro[campo] = new RegExp(`^${valor}$`, 'i');
+      } else if (campo === 'tipo_residuo') {
+        // Normaliza para eliminar tildes en la comparación
+        const valorNormalizado = valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        filtro[campo] = new RegExp(`^${valorNormalizado}$`, 'i');
+      } else if (['nombre', 'descripción'].includes(campo)) {
+        filtro[campo] = valor;
+      }
 
-        let html = `
-        <html>
+      console.log('Filtro aplicado:', filtro);
+      residuos = await coleccion.find(filtro).toArray();
+    }
+
+    console.log('Número de resultados:', residuos.length);
+
+    let html = `
+        <!DOCTYPE html>
+        <html lang="es">
         <head>
-            <style>
-                table {
-                    border-collapse: collapse;
-                    width: 95%;
-                    margin: 20px auto;
-                }
-                th, td {
-                    border: 1px solid #FFA500;
-                    padding: 8px;
-                    text-align: center;
-                }
-                th {
-                    background-color: #FFA500;
-                    color: white;
-                }
-                body {
-                    font-family: Arial, sans-serif;
-                }
-                h2 { text-align: center; color: #FFA500; }
-                .volver { text-align: center; margin: 20px; }
-                .volver a { text-decoration: none; color: #FFA500; font-weight: bold; }
-            </style>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Lista de Residuos</title>
+          <style>
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              background-color: #f0f2f5;
+              margin: 0;
+              padding: 20px;
+            }
+            h2 {
+              color: #007BFF;
+              text-align: center;
+            }
+            .menu {
+              text-align: center;
+              margin: 20px 0;
+            }
+            .menu a {
+              margin: 0 15px;
+              text-decoration: none;
+              color: #007BFF;
+              font-weight: 500;
+              transition: color 0.3s ease;
+            }
+            .menu a:hover {
+              color: #0056b3;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: auto;
+              background-color: white;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            th, td {
+              padding: 12px 16px;
+              text-align: center;
+              border-bottom: 1px solid #e0e0e0;
+            }
+            th {
+              background-color: #007BFF;
+              color: white;
+              text-transform: uppercase;
+            }
+            tr:hover {
+              background-color: #f1f1f1;
+            }
+          </style>
         </head>
         <body>
-            <h2>Resultado de Visualización</h2>
-            <table>
-                <tr>
-                    <th>No. Control</th>
-                    <th>Nombre</th>
-                    <th>Carrera</th>
-                    <th>Semestre</th>
-                    <th>Correo</th>
-                    <th>Edad</th>
-                    <th>Generación</th>
-                </tr>`;
+          <h2>Lista de Residuos del Proyecto</h2>
+          <div class="menu">
+            <a href="/alta.html">Alta</a>
+            <a href="/baja.html">Baja</a>
+            <a href="/actualizar.html">Actualizar</a>
+            <a href="/visualizar.html">Visualizar</a>
+          </div>
+          <table>
+            <tr>
+              <th>ID Proyecto</th>
+              <th>Nombre</th>
+              <th>Tipo de Residuo</th>
+              <th>Descripción</th>
+              <th>Estatus</th>
+              <th>Fecha</th>
+            </tr>`;
 
-        alumnos.forEach(alumno => {
-            html += `
-                <tr>
-                    <td>${alumno.no_control}</td>
-                    <td>${alumno.nombre}</td>
-                    <td>${alumno.carrera}</td>
-                    <td>${alumno.semestre}</td>
-                    <td>${alumno.correo}</td>
-                    <td>${alumno.edad}</td>
-                    <td>${alumno.Generacion}</td>
-                </tr>`;
+        residuos.forEach(item => {
+          html += `
+            <tr>
+              <td>${item.id_proyecto || ''}</td>
+              <td>${item.nombre || ''}</td>
+              <td>${item.tipo_residuo || ''}</td>
+              <td>${item.descripción || ''}</td>
+              <td>${item.estatus || ''}</td>
+              <td>${item.fecha || ''}</td>
+            </tr>`;
         });
 
-        html += `</table><div class="volver"><a href="/visualizar.html">Volver</a></div></body></html>`;
+        html += `
+          </table>
+        </body>
+        </html>`;
+
         res.send(html);
-    } catch (err) {
-        res.status(500).send('Error en la visualización: ' + err.message);
-    } finally {
-        await client.close();
-    }
-});
 
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+      } catch (err) {
+        res.status(500).send('Error en la visualizacion: ' + err.message);
+      }
+    });
 
+        app.listen(PORT, () => {
+      console.log(`Servidor corriendo en http://localhost:${PORT}/residuos`);
+    });
+
+  } catch (error) {
+    console.error('Error conectando a MongoDB:', error);
+  }
+}
+
+main();

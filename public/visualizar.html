@@ -1,96 +1,172 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Visualizar Alumnos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        h2 {
-            text-align: center;
-            color: #FFA500;
-        }
-        form {
-            max-width: 400px;
-            margin: 0 auto 20px auto;
-            padding: 20px;
-            border: 2px solid #FFA500;
-            border-radius: 10px;
-            background-color: #fdf5e6;
-        }
-        label, select, button {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        select, button {
-            padding: 8px;
-            border: 1px solid #FFA500;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #FFA500;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        button:hover {
-            background-color: #e59400;
-        }
-        .volver {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .volver a {
-            text-decoration: none;
-            color: #FFA500;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Filtrar Residuos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #007BFF;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    select, input[type="text"] {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: #007BFF;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .volver {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .volver a {
+      color: #007BFF;
+      text-decoration: none;
+      font-weight: bold;
+      transition: text-decoration 0.3s ease;
+    }
+
+    .volver a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h2>Visualizar Alumnos</h2>
-    <form method="get" action="/visualizar">
-    <label for="campo">Selecciona un campo:</label>
-    <select name="campo" id="campo" onchange="toggleValorInput()">
-        <option value="">-- Ver todos --</option>
-        <option value="no_control">No. Control</option>
+  <div class="container">
+    <h2>Filtrar Residuos</h2>
+    <form action="/visualizar" method="GET" id="formFiltro">
+      <label for="campo">Campo a filtrar:</label>
+      <select name="campo" id="campo" onchange="mostrarOpciones()" required>
+        <option value="">-- Seleccionar campo --</option>
+        <option value="id_proyecto">ID Proyecto</option>
         <option value="nombre">Nombre</option>
-        <option value="carrera">Carrera</option>
-        <option value="semestre">Semestre</option>
-        <option value="correo">Correo</option>
-        <option value="edad">Edad</option>
-        <option value="Generacion">Generación</option>
-    </select>
+        <option value="descripción">Descripción</option>
+        <option value="tipo_residuo">Tipo de Residuo</option>
+        <option value="estatus">Estatus</option>
+      </select>
 
-    <div id="valorInput" style="display:none;">
-        <label for="valor">Escribe el valor a buscar:</label>
-        <input type="text" name="valor" id="valor" placeholder="Ej. Carlos o 2025001001">
-    </div>
+      <div id="valor-texto" class="hidden">
+        <label for="input-valor">Valor:</label>
+        <input type="text" id="input-valor" oninput="actualizarValor(this.value)" />
+      </div>
 
-    <button type="submit">Visualizar</button>
-</form>
+      <div id="valor-select-estatus" class="hidden">
+        <label for="select-estatus">Estatus:</label>
+        <select id="select-estatus" onchange="actualizarValor(this.value)">
+          <option value="">-- Seleccione estatus --</option>
+          <option value="por iniciar">por iniciar</option>
+          <option value="en proceso">en proceso</option>
+          <option value="terminado">terminado</option>
+        </select>
+      </div>
 
-<script>
-function toggleValorInput() {
-    const campo = document.getElementById('campo').value;
-    const valorInput = document.getElementById('valorInput');
-    if (campo === 'nombre' || campo === 'no_control' || campo === 'correo') {
-        valorInput.style.display = 'block';
-    } else {
-        valorInput.style.display = 'none';
-    }
-}
-</script>
+      <div id="valor-select-tipo" class="hidden">
+        <label for="select-tipo">Tipo de Residuo:</label>
+        <select id="select-tipo" onchange="actualizarValor(this.value)">
+          <option value="">-- Seleccione tipo --</option>
+          <option value="Organico">Organico</option>
+          <option value="Reciclable">Reciclable</option>
+          <option value="Peligroso">Peligroso</option>
+          <option value="Reutilizable">Reutilizable</option>
+        </select>
+      </div>
+
+      <input type="hidden" name="valor" id="valorFinal" required>
+      <button type="submit">Buscar</button>
     </form>
+
     <div class="volver">
-        <a href="/alumnos">Volver al inicio</a>
+      <a href="/residuos">Volver a la lista</a>
     </div>
+  </div>
+
+  <script>
+    function mostrarOpciones() {
+      const campo = document.getElementById('campo').value;
+      const valorTexto = document.getElementById('valor-texto');
+      const valorEstatus = document.getElementById('valor-select-estatus');
+      const valorTipo = document.getElementById('valor-select-tipo');
+
+      valorTexto.classList.add('hidden');
+      valorEstatus.classList.add('hidden');
+      valorTipo.classList.add('hidden');
+
+      if (campo === 'estatus') {
+        valorEstatus.classList.remove('hidden');
+        actualizarValor(document.getElementById('select-estatus').value);
+      } else if (campo === 'tipo_residuo') {
+        valorTipo.classList.remove('hidden');
+        actualizarValor(document.getElementById('select-tipo').value);
+      } else if (campo !== '') {
+        valorTexto.classList.remove('hidden');
+        actualizarValor(document.getElementById('input-valor').value);
+      }
+    }
+
+    function actualizarValor(valorSeleccionado) {
+      document.getElementById('valorFinal').value = valorSeleccionado;
+    }
+  </script>
 </body>
 </html>

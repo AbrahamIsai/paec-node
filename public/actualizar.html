@@ -1,143 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Actualizar Alumno</title>
+  <meta charset="UTF-8">
+  <title>Actualizar Residuo</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 420px;
-      margin: 30px auto;
-      padding: 10px;
-      background: #f9f9f9;
-      border-radius: 6px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
     }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 460px;
+    }
+
     h2 {
       text-align: center;
-      color: #333;
-      margin-bottom: 20px;
+      color: #007BFF;
+      margin-bottom: 25px;
     }
+
     form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    input, select {
-      padding: 10px;
-      font-size: 1em;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
-    }
-    input:focus, select:focus {
-      border-color: #28a745;
-      outline: none;
-    }
-    button {
-      padding: 10px;
-      font-size: 1em;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #1e7e34;
-    }
-    .optional-fields {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
+      gap: 15px;
     }
 
-    /* Estilo para botón volver */
+    input, select {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #007BFF;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
     .btn-volver {
       margin-top: 20px;
       display: block;
       text-align: center;
-      padding: 10px 0;
       background-color: #6c757d;
       color: white;
-      border-radius: 4px;
+      padding: 10px;
       text-decoration: none;
+      border-radius: 8px;
       font-weight: bold;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s ease;
     }
+
     .btn-volver:hover {
       background-color: #5a6268;
+    }
+
+    .optional-fields > * {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h2>Actualizar alumno</h2>
-  <form id="updateForm" action="/actualizar" method="post">
-    <input name="no_control" placeholder="No. Control (clave para buscar)" required>
+  <div class="container">
+    <h2>Actualizar Residuo</h2>
+    <form id="updateForm" action="/actualizar" method="post">
+      <input name="id_proyecto" placeholder="ID del Proyecto" required type="number" min="1">
 
-    <label for="fieldSelect">Seleccione campo a actualizar:</label>
-    <select id="fieldSelect" name="field" required>
-      <option value="" disabled selected>-- Elige campo --</option>
-      <option value="nombre">Nombre</option>
-      <option value="carrera">Carrera</option>
-      <option value="semestre">Semestre</option>
-      <option value="correo">Correo</option>
-      <option value="edad">Edad</option>
-      <option value="Generacion">Generación</option>
-      <option value="todos">Actualizar todos</option>
-    </select>
+      <label for="fieldSelect">Seleccione campo a actualizar:</label>
+      <select id="fieldSelect" name="field" required>
+        <option value="" disabled selected>-- Elige campo --</option>
+        <option value="nombre">Nombre</option>
+        <option value="tipo_residuo">Tipo de Residuo</option>
+        <option value="descripción">Descripción</option>
+        <option value="estatus">Estatus</option>
+        <option value="fecha">Fecha</option>
+        <option value="todos">Actualizar todos</option>
+      </select>
 
-    <div id="fieldsContainer" class="optional-fields">
-      <input name="nombre" placeholder="Nuevo nombre">
-      <input name="carrera" placeholder="Nueva carrera">
-      <input name="semestre" type="number" placeholder="Nuevo semestre" min="1" max="12">
-      <input name="correo" type="email" placeholder="Nuevo correo">
-      <input name="edad" type="number" placeholder="Nueva edad" min="1" max="120">
-      <input name="Generacion" type="number" placeholder="Nueva generación">
-    </div>
+      <div id="fieldsContainer" class="optional-fields">
+        <input name="nombre" placeholder="Nuevo nombre" type="text">
+        
+        <select name="tipo_residuo" id="tipoResiduo">
+          <option value="" disabled selected>-- Nuevo tipo de residuo --</option>
+          <option value="Organico">Organico</option>
+          <option value="Reciclable">Reciclable</option>
+          <option value="Peligroso">Peligroso</option>
+          <option value="Reutilizable">Reutilizable</option>
+        </select>
 
-    <button type="submit">Actualizar</button>
-  </form>
+        <input name="descripción" placeholder="Nueva descripción" type="text">
 
-  <a href="/alumnos" class="btn-volver">Volver al inicio</a>
+        <select name="estatus" id="estatus">
+          <option value="" disabled selected>-- Nuevo estatus --</option>
+          <option value="por iniciar">por iniciar</option>
+          <option value="en proceso">en proceso</option>
+          <option value="terminado">terminado</option>
+        </select>
+
+        <input name="fecha" placeholder="Nueva fecha (YYYY-MM-DD)" type="date">
+      </div>
+
+      <button type="submit">Actualizar</button>
+    </form>
+
+    <a href="/residuos" class="btn-volver">Volver al inicio</a>
+  </div>
 
   <script>
     const fieldSelect = document.getElementById('fieldSelect');
     const fieldsContainer = document.getElementById('fieldsContainer');
-    const inputs = fieldsContainer.querySelectorAll('input');
+    const inputs = fieldsContainer.querySelectorAll('input, select');
+
+    function hideAllFields() {
+      inputs.forEach(i => {
+        i.style.display = 'none';
+        i.required = false;
+        if(i.tagName === 'SELECT') {
+          i.selectedIndex = 0;
+        } else {
+          i.value = '';
+        }
+      });
+    }
 
     fieldSelect.addEventListener('change', () => {
       const val = fieldSelect.value;
 
-      if(val === 'todos') {
-        // Mostrar todos los campos
-        fieldsContainer.style.display = 'flex';
-        inputs.forEach(i => i.required = true);
-        inputs.forEach(i => i.style.display = 'block');
-      } else if(val) {
-        // Mostrar solo el campo seleccionado, esconder otros
-        fieldsContainer.style.display = 'flex';
+      hideAllFields();
+
+      if (val === 'todos') {
+        inputs.forEach(i => {
+          i.style.display = 'block';
+          i.required = true;
+        });
+      } else if (val) {
         inputs.forEach(i => {
           if(i.name === val) {
             i.style.display = 'block';
             i.required = true;
-          } else {
-            i.style.display = 'none';
-            i.required = false;
-            i.value = '';
           }
-        });
-      } else {
-        // Nada seleccionado, ocultar todos
-        fieldsContainer.style.display = 'none';
-        inputs.forEach(i => {
-          i.style.display = 'block';
-          i.required = false;
-          i.value = '';
         });
       }
     });
+
+    hideAllFields();
   </script>
 </body>
 </html>

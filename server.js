@@ -79,7 +79,7 @@ async function main() {
           </style>
         </head>
         <body>
-          <h2>Lista de Residuos del Proyecto</h2>
+          <h2>Lista de Residuos del Proyecto PAEC</h2>
           <div class="menu">
             <a href="/alta.html">Alta</a>
             <a href="/baja.html">Baja</a>
@@ -310,7 +310,7 @@ app.get('/visualizar', async (req, res) => {
           </style>
         </head>
         <body>
-          <h2>Lista de Residuos del Proyecto</h2>
+          <h2>Lista de Residuos del Proyecto PAEC</h2>
           <div class="menu">
             <a href="/alta.html">Alta</a>
             <a href="/baja.html">Baja</a>

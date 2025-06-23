@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Actualizar Punto de Recolección</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 460px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #28a745;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #28a745;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .btn-volver {
+      margin-top: 20px;
+      display: block;
+      text-align: center;
+      background-color: #6c757d;
+      color: white;
+      padding: 10px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-volver:hover {
+      background-color: #5a6268;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Actualizar Punto de Recolección</h2>
+    <form id="updateForm" action="/actualizarPunto" method="post">
+      <label for="ubicacion">Ubicación del Punto:</label>
+      <select name="ubicacion" id="ubicacion" required>
+        <option value="">-- Seleccione ubicación --</option>
+        <option value="Contenedores alrededor de edificio A">Edificio A</option>
+        <option value="Contenedores alrededor de edificio B">Edificio B</option>
+        <option value="Contenedores alrededor de edificio C">Edificio C</option>
+        <option value="Contenedores alrededor de edificio D">Edificio D</option>
+        <option value="Contenedores alrededor de edificio E">Edificio E</option>
+        <option value="Contenedores alrededor de edificio N">Edificio N</option>
+        <option value="Contenedores alrededor de edificio SC1">Edificio SC1</option>
+        <option value="Contenedores alrededor de edificio SC2">Edificio SC2</option>
+        <option value="Contenedores alrededor de edificio SC3">Edificio SC3</option>
+        <option value="Contenedores alrededor de edificio SC4">Edificio SC4</option>
+      </select>
+
+      <label for="fieldSelect">Campo a actualizar:</label>
+      <select id="fieldSelect" name="field" required onchange="mostrarCamposActualizar()">
+        <option value="">-- Elige campo --</option>
+        <option value="tipo_reciclaje">Tipo de Reciclaje</option>
+        <option value="horario">Horario</option>
+        <option value="responsable">Responsable</option>
+        <option value="todos">Actualizar todos</option>
+      </select>
+
+      <div id="fieldsContainer">
+        <div id="select-tipo" class="hidden">
+          <label for="tipo_reciclaje">Tipo de Reciclaje:</label>
+          <select name="tipo_reciclaje">
+            <option value="">-- Seleccione tipo --</option>
+            <option value="Plástico">Plástico</option>
+            <option value="Vidrio">Vidrio</option>
+            <option value="Papel y cartón">Papel y cartón</option>
+            <option value="Residuos orgánicos">Residuos orgánicos</option>
+            <option value="Metales">Metales</option>
+            <option value="Tetra Pak">Tetra Pak</option>
+            <option value="Baterías">Baterías</option>
+            <option value="Tecnológicos">Tecnológicos</option>
+            <option value="Cartón">Cartón</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div id="input-horario" class="hidden">
+          <label for="horario">Horario:</label>
+          <input name="horario" type="text" placeholder="Ej. 08:00 - 14:00">
+        </div>
+
+        <div id="select-responsable" class="hidden">
+          <label for="responsable">Responsable:</label>
+          <select name="responsable">
+            <option value="">-- Seleccione responsable --</option>
+            <option value="Coordinación de ecología">Coordinación de ecología</option>
+            <option value="Docente">Docente</option>
+            <option value="Alumno">Alumno</option>
+            <option value="Equipo de coordinación de ecología">Equipo de coordinación de ecología</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit">Actualizar</button>
+    </form>
+
+    <a href="/puntosrecoleccion" class="btn-volver">Volver a puntos de recolección</a>
+  </div>
+
+  <script>
+    function mostrarCamposActualizar() {
+      const seleccion = document.getElementById('fieldSelect').value;
+      const divTipo = document.getElementById('select-tipo');
+      const divHorario = document.getElementById('input-horario');
+      const divResponsable = document.getElementById('select-responsable');
+
+      // Oculta todo
+      divTipo.classList.add('hidden');
+      divHorario.classList.add('hidden');
+      divResponsable.classList.add('hidden');
+
+      if (seleccion === 'todos') {
+        divTipo.classList.remove('hidden');
+        divHorario.classList.remove('hidden');
+        divResponsable.classList.remove('hidden');
+      } else if (seleccion === 'tipo_reciclaje') {
+        divTipo.classList.remove('hidden');
+      } else if (seleccion === 'horario') {
+        divHorario.classList.remove('hidden');
+      } else if (seleccion === 'responsable') {
+        divResponsable.classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

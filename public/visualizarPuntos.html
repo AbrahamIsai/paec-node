@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Filtrar Puntos de Recolección</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f5f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background-color: #ffffff;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #28a745;
+      margin-bottom: 25px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    select, input[type="text"] {
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: #28a745;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1e7e34;
+    }
+
+    .volver {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .volver a {
+      color: #28a745;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .volver a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Filtrar Puntos de Recolección</h2>
+    <form action="/visualizarPuntos" method="GET" id="formFiltro">
+      <label for="campo">Campo a filtrar:</label>
+      <select name="campo" id="campo" onchange="mostrarOpciones()" required>
+        <option value="">-- Seleccionar campo --</option>
+        <option value="ubicacion">Ubicación</option>
+        <option value="tipo_reciclaje">Tipo de Reciclaje</option>
+        <option value="responsable">Responsable</option>
+        <option value="horario">Horario</option>
+      </select>
+
+      <div id="valor-texto" class="hidden">
+        <label for="input-valor">Valor:</label>
+        <input type="text" id="input-valor" oninput="actualizarValor(this.value)" />
+      </div>
+
+      <div id="valor-select-tipo" class="hidden">
+        <label for="select-tipo">Tipo de Reciclaje:</label>
+        <select id="select-tipo" onchange="actualizarValor(this.value)">
+          <option value="">-- Seleccione tipo --</option>
+          <option value="Plástico">Plástico</option>
+          <option value="Papel">Papel</option>
+          <option value="Vidrio">Vidrio</option>
+          <option value="Metal">Metal</option>
+          <option value="Orgánico">Orgánico</option>
+          <option value="Papel y cartón">Papel y cartón</option>
+          <option value="Residuos orgánicos">Residuos orgánicos</option>
+          <option value="Metales">Metales</option>
+          <option value="Tetra Pak">Tetra Pak</option>
+          <option value="Baterías">Baterías</option>
+          <option value="Tecnológicos">Tecnológicos</option>
+          <option value="Cartón">Cartón</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div id="valor-select-responsable" class="hidden">
+        <label for="select-responsable">Responsable:</label>
+        <select id="select-responsable" onchange="actualizarValor(this.value)">
+          <option value="">-- Seleccione responsable --</option>
+          <option value="Coordinación de ecología">Coordinación de ecología</option>
+          <option value="Docente">Docente</option>
+          <option value="Alumno">Alumno</option>
+          <option value="Equipo de coordinación de ecología">Equipo de coordinación de ecología</option>
+        </select>
+      </div>
+
+      <div id="valor-select-ubicacion" class="hidden">
+        <label for="select-ubicacion">Ubicación:</label>
+        <select id="select-ubicacion" onchange="actualizarValor(this.value)">
+          <option value="">-- Seleccione ubicación --</option>
+          <option value="Contenedores alrededor de edificio A">Edificio A</option>
+          <option value="Contenedores alrededor de edificio B">Edificio B</option>
+          <option value="Contenedores alrededor de edificio C">Edificio C</option>
+          <option value="Contenedores alrededor de edificio D">Edificio D</option>
+          <option value="Contenedores alrededor de edificio E">Edificio E</option>
+          <option value="Contenedores alrededor de edificio N">Edificio N</option>
+          <option value="Contenedores alrededor de edificio SC1">Edificio SC1</option>
+          <option value="Contenedores alrededor de edificio SC2">Edificio SC2</option>
+          <option value="Contenedores alrededor de edificio SC3">Edificio SC3</option>
+          <option value="Contenedores alrededor de edificio SC4">Edificio SC4</option>
+        </select>
+      </div>
+
+      <input type="hidden" name="valor" id="valorFinal" required>
+      <button type="submit">Buscar</button>
+    </form>
+
+    <div class="volver">
+      <a href="/puntosrecoleccion">Volver a la lista</a>
+    </div>
+  </div>
+
+  <script>
+    function mostrarOpciones() {
+      const campo = document.getElementById('campo').value;
+
+      document.getElementById('valor-texto').classList.add('hidden');
+      document.getElementById('valor-select-tipo').classList.add('hidden');
+      document.getElementById('valor-select-responsable').classList.add('hidden');
+      document.getElementById('valor-select-ubicacion').classList.add('hidden');
+
+      if (campo === 'tipo_reciclaje') {
+        document.getElementById('valor-select-tipo').classList.remove('hidden');
+        actualizarValor(document.getElementById('select-tipo').value);
+      } else if (campo === 'responsable') {
+        document.getElementById('valor-select-responsable').classList.remove('hidden');
+        actualizarValor(document.getElementById('select-responsable').value);
+      } else if (campo === 'ubicacion') {
+        document.getElementById('valor-select-ubicacion').classList.remove('hidden');
+        actualizarValor(document.getElementById('select-ubicacion').value);
+      } else if (campo !== '') {
+        document.getElementById('valor-texto').classList.remove('hidden');
+        actualizarValor(document.getElementById('input-valor').value);
+      }
+    }
+
+    function actualizarValor(valorSeleccionado) {
+      document.getElementById('valorFinal').value = valorSeleccionado;
+    }
+  </script>
+</body>
+</html>
